@@ -1,0 +1,174 @@
+Section,Title,Type,Priority,Preconditions,Steps,Expected Result,References,Automation Type
+Authentication,Register a new user with valid information,Functional,High,User is not logged in. Test email does not already exist.,"1. Open the mobile application.
+2. Tap Create Account or Register.
+3. Enter valid name, email, and password.
+4. Submit the registration form.","1. User account is created successfully.
+2. User is redirected to the login screen or home dashboard.
+3. Backend stores the user with a hashed password, not plain text.",,Manual
+Authentication,Reject registration with an already used email,Negative,High,A user account already exists with the test email.,"1. Open the registration screen.
+2. Enter the existing email with valid password and name.
+3. Submit the form.","1. Application displays a clear duplicate-email error.
+2. No second account is created.
+3. User remains on the registration screen.",,Manual
+Authentication,Reject registration when required fields are empty,Negative,High,User is on the registration screen.,"1. Leave name, email, or password empty.
+2. Submit the form.","1. Application displays required-field validation messages.
+2. Request is not accepted by the backend.
+3. User account is not created.",,Manual
+Authentication,Login with valid credentials,Functional,High,A registered user exists.,"1. Open the login screen.
+2. Enter valid email and password.
+3. Tap Login.","1. User is authenticated successfully.
+2. Application navigates to the dashboard.
+3. A valid session token is stored securely on the device.",,Manual
+Authentication,Reject login with invalid password,Negative,High,A registered user exists.,"1. Open the login screen.
+2. Enter the registered email and an incorrect password.
+3. Tap Login.","1. Application displays an invalid credentials message.
+2. User is not logged in.
+3. No protected product data is shown.",,Manual
+Authentication,Logout clears user session,Functional,High,User is logged in.,"1. Open Settings or Profile.
+2. Tap Logout.
+3. Confirm logout if prompted.
+4. Close and reopen the application.","1. User is logged out.
+2. Session token is cleared or invalidated.
+3. Application opens to the login screen and does not show private product data.",,Manual
+Authentication,Block access to protected API without token,Security,High,Backend API is running.,1. Send a request to a protected product endpoint without an authentication token.,"1. Backend returns 401 Unauthorized or equivalent.
+2. No product data is returned.",,Manual
+Dashboard,Display dashboard summary after login,Functional,High,User is logged in and has at least one saved product.,"1. Log in to the mobile app.
+2. Open the dashboard screen.","1. Dashboard loads successfully.
+2. Application displays product summary information such as total products, expired items, and soon-to-expire items.
+3. Only the current user’s product data is shown.",,Manual
+Dashboard,Show empty state when user has no products,Functional,Medium,User is logged in and has no saved products.,1. Open the dashboard or product list screen.,"1. Application displays a helpful empty-state message.
+2. Application provides a clear option to add a product manually.",,Manual
+Product Management,Add product manually with all valid fields,Functional,High,User is logged in.,"1. Open Add Product screen.
+2. Enter product name, category, quantity, storage location, purchase date, and expiration date manually.
+3. Tap Save.","1. Product is saved successfully.
+2. Product appears in the product list.
+3. Product data is stored in the backend database under the current user.",,Manual
+Product Management,Add product manually with only required fields,Functional,High,User is logged in.,"1. Open Add Product screen.
+2. Enter only required fields such as product name and expiration date.
+3. Tap Save.","1. Product is saved successfully if required fields are valid.
+2. Optional fields remain blank or use default values.
+3. Product appears in the product list.",,Manual
+Product Management,Reject product save when name is missing,Negative,High,User is logged in.,"1. Open Add Product screen.
+2. Leave product name empty.
+3. Enter a valid expiration date.
+4. Tap Save.","1. Application displays a product-name validation message.
+2. Product is not saved.",,Manual
+Product Management,Reject product save when expiration date is missing,Negative,High,User is logged in.,"1. Open Add Product screen.
+2. Enter product name.
+3. Leave expiration date empty.
+4. Tap Save.","1. Application displays an expiration-date validation message.
+2. Product is not saved.",,Manual
+Product Management,Allow past expiration date and mark product expired,Functional,Medium,User is logged in.,"1. Open Add Product screen.
+2. Enter valid product information.
+3. Set expiration date to a date before today.
+4. Tap Save.","1. Product is saved successfully or user is warned before saving based on design.
+2. Product status appears as Expired in the list/dashboard.",,Manual
+Product Management,Prevent invalid quantity values,Negative,Medium,User is logged in.,"1. Open Add Product screen.
+2. Enter a negative quantity or invalid text in the quantity field.
+3. Tap Save.","1. Application displays a quantity validation message.
+2. Invalid quantity is not saved.",,Manual
+Product Management,Edit existing product details,Functional,High,User is logged in and has at least one product.,"1. Open the product list.
+2. Select an existing product.
+3. Tap Edit.
+4. Change product name, quantity, category, location, or expiration date.
+5. Tap Save.","1. Updated product details are saved successfully.
+2. Product list and product detail screen show the new information.
+3. Backend database reflects the update.",,Manual
+Product Management,Cancel edit without saving changes,Functional,Medium,User is logged in and has at least one product.,"1. Open an existing product.
+2. Tap Edit.
+3. Change one or more fields.
+4. Tap Cancel or go back without saving.","1. Application returns to the previous screen.
+2. Original product data remains unchanged.",,Manual
+Product Management,Delete an existing product after confirmation,Functional,High,User is logged in and has at least one product.,"1. Open the product detail screen.
+2. Tap Delete.
+3. Confirm the delete action.","1. Product is removed from the list.
+2. Product is deleted or marked inactive in the backend.
+3. Dashboard summary updates accordingly.",,Manual
+Product Management,Cancel product delete confirmation,Functional,Medium,User is logged in and has at least one product.,"1. Open the product detail screen.
+2. Tap Delete.
+3. Cancel the confirmation prompt.","1. Product is not deleted.
+2. User remains on the product detail screen or returns safely.",,Manual
+Product List,View all saved products,Functional,High,User is logged in and has multiple products.,1. Open the Products screen.,"1. All products belonging to the current user are displayed.
+2. Each product shows key information such as name, expiration date, and status.",,Manual
+Product List,Sort products by expiration date,Functional,Medium,User is logged in and has multiple products with different expiration dates.,"1. Open the Products screen.
+2. Select sorting by expiration date.","1. Products are ordered by expiration date.
+2. Soonest expiration dates appear first if ascending sort is selected.",,Manual
+Product List,Filter products by expiration status,Functional,Medium,"User is logged in and has active, soon-to-expire, and expired products.","1. Open the Products screen.
+2. Apply the Expired filter.
+3. Apply the Soon to Expire filter.","1. Expired filter shows only expired products.
+2. Soon to Expire filter shows only products within the configured alert range.
+3. Removing filters restores the full list.",,Manual
+Product List,Search products by name,Functional,Medium,User is logged in and has multiple products.,"1. Open the Products screen.
+2. Enter a product name or partial name in the search field.","1. Product list updates to show matching products.
+2. Non-matching products are hidden.
+3. Empty search restores the full list.",,Manual
+Product Detail,Open product detail screen,Functional,Medium,User is logged in and has at least one product.,"1. Open the product list.
+2. Tap a product item.","1. Product detail screen opens.
+2. Screen shows full saved product information.
+3. Edit and delete actions are available if allowed.",,Manual
+Expiration Tracking,Mark product as expired when expiration date has passed,Functional,High,User has a product with an expiration date before today.,1. Open dashboard or product list.,"1. Product status is displayed as Expired.
+2. Expired product is included in expired count or expired filter.",,Manual
+Expiration Tracking,Mark product as soon to expire based on alert threshold,Functional,High,User has a product expiring within the configured alert threshold.,1. Open dashboard or product list.,"1. Product status is displayed as Soon to Expire or equivalent.
+2. Product is included in soon-to-expire count/filter.",,Manual
+Expiration Tracking,Display product as active when expiration is outside threshold,Functional,Medium,User has a product with expiration date after the alert threshold.,1. Open dashboard or product list.,"1. Product status is displayed as Active or Safe.
+2. Product is not shown in expired or soon-to-expire filters.",,Manual
+Notifications,Create expiration notification for soon-to-expire product,Functional,High,"User is logged in, notifications are enabled, and a product is near expiration.","1. Run scheduled expiration check or trigger backend notification job.
+2. Open the app notification area or observe device notification.","1. Notification is generated for the correct product.
+2. Notification includes useful information such as product name and expiration date.
+3. Notification belongs only to the owning user.",,Manual
+Notifications,Do not create duplicate notification for same product and date,Functional,Medium,A notification already exists for the product for the current alert period.,1. Run the scheduled expiration check again for the same product.,"1. Backend does not create duplicate notifications for the same product alert.
+2. User receives only one relevant alert.",,Manual
+Notifications,Disable notifications from settings,Functional,Medium,User is logged in and notifications are enabled.,"1. Open Settings.
+2. Turn off expiration notifications.
+3. Save settings.
+4. Run expiration check for a soon-to-expire product.","1. User preference is saved.
+2. No push or in-app notification is generated for that user while disabled.",,Manual
+Settings,Update expiration alert threshold,Functional,Medium,User is logged in.,"1. Open Settings.
+2. Change alert threshold, for example from 7 days to 3 days.
+3. Save settings.","1. New threshold is saved.
+2. Soon-to-expire status and notifications use the updated threshold.",,Manual
+Settings,Persist user settings after app restart,Functional,Medium,User is logged in and has changed settings.,"1. Change alert threshold or notification preference.
+2. Close the application.
+3. Reopen and log in if needed.
+4. Open Settings.","1. Previously saved settings are displayed correctly.
+2. Application behavior follows the saved settings.",,Manual
+Backend API,Create product through API with valid authenticated request,API,High,Backend is running and valid auth token is available.,1. Send POST request to product create endpoint with valid product JSON and auth token.,"1. API returns success status such as 201 Created.
+2. Response includes created product data or product ID.
+3. Database contains the new product linked to the authenticated user.",,Automated Candidate
+Backend API,Reject product API request with missing required fields,API,High,Backend is running and valid auth token is available.,1. Send POST request to product create endpoint without product name or expiration date.,"1. API returns validation error status such as 400 Bad Request.
+2. Response explains the missing or invalid field.
+3. Database is not changed.",,Automated Candidate
+Backend API,Return only current user products from product list API,Security,High,"Two users exist, each with different products.","1. Authenticate as User A.
+2. Call product list endpoint.","1. API returns only User A products.
+2. User B products are not included in the response.",,Automated Candidate
+Backend API,Prevent user from editing another user product,Security,High,Two users exist. User B owns a product.,"1. Authenticate as User A.
+2. Send update request for User B product ID.","1. API returns 403 Forbidden or 404 Not Found.
+2. User B product remains unchanged.",,Automated Candidate
+Backend API,Prevent user from deleting another user product,Security,High,Two users exist. User B owns a product.,"1. Authenticate as User A.
+2. Send delete request for User B product ID.","1. API returns 403 Forbidden or 404 Not Found.
+2. User B product remains available.",,Automated Candidate
+Database,Store product data with correct schema fields,Database,Medium,Backend and database are running.,"1. Create a product using the app or API.
+2. Inspect the product record in the database.","1. Record contains expected fields such as id, user_id, name, category, quantity, location, purchase_date, expiration_date, created_at, and updated_at.
+2. Record does not contain barcode or AI scan fields for the current project scope.",,Manual
+Database,Delete or archive product consistently,Database,Medium,User has at least one product in the database.,"1. Delete the product from the app.
+2. Inspect the database record or product list endpoint.","1. Deleted product no longer appears in user-facing product list.
+2. Database state matches the chosen design: hard deleted or marked inactive.",,Manual
+Mobile UI,Display validation errors clearly on mobile screens,UI,Medium,User is on Add Product or Login screen.,1. Submit a form with invalid or missing fields.,"1. Validation messages appear near the related fields or in a clear alert.
+2. Messages are readable on mobile screen sizes.
+3. User can correct the form without losing already entered valid data.",,Manual
+Mobile UI,Handle network error when backend is unavailable,Resilience,High,Mobile app is installed and backend service is stopped or unreachable.,1. Open the app and attempt login or product list loading.,"1. Application displays a friendly network error message.
+2. Application does not crash.
+3. User can retry after service is restored.",,Manual
+Mobile UI,Show loading state while product data is loading,UI,Low,User is logged in and network is slow.,1. Open dashboard or product list during slow API response.,"1. Application shows loading indicator or skeleton state.
+2. Application updates with product data after response is received.",,Manual
+Docker / Deployment,Start project services with Docker Compose,Integration,High,docker-compose.yml and Dockerfiles are configured.,"1. Run docker compose up --build.
+2. Check running services.","1. Database container starts successfully.
+2. Backend container starts successfully and connects to database.
+3. Mobile/Expo development service starts if included in the compose profile.",,Manual
+Docker / Deployment,Backend reads environment variables from container configuration,Integration,Medium,Docker Compose environment variables are configured.,"1. Start backend container.
+2. Check backend logs and health endpoint if available.","1. Backend uses configured database host, port, username, password, and JWT secret.
+2. No hard-coded local-only configuration is required for container startup.",,Manual
+Regression,Manual-entry-only scope does not show barcode or AI scanning options,Regression,High,Application is installed with current project scope.,"1. Open dashboard, add product screen, product detail screen, and settings.
+2. Review visible actions and fields.","1. No barcode scanning button is displayed.
+2. No AI scanning/image recognition option is displayed.
+3. Product creation is completed by manual entry only.",,Manual
