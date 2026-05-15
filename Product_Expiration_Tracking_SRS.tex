@@ -1,0 +1,282 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Software Requirements Specification}
+\rhead{Product Expiration Tracking App}
+\cfoot{\thepage}
+
+\title{Software Requirements Specification (SRS)\\Product Expiration Tracking Application}
+\author{Prepared for Course Project}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section*{Document Revision History}
+\addcontentsline{toc}{section}{Document Revision History}
+
+\begin{longtable}{|p{0.15\textwidth}|p{0.18\textwidth}|p{0.22\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Version} & \textbf{Date} & \textbf{Snapshot} & \textbf{Description of Revision} \\
+\hline
+0.1 & Snapshot 1 & Initial Planning & Created the first requirements outline, including project purpose, users, core features, and general system scope. \\
+\hline
+0.2 & Snapshot 2 & Requirements Expansion & Added functional requirements for account management, product tracking, categories, expiration alerts, and product search/filtering. \\
+\hline
+0.3 & Snapshot 3 & Architecture Alignment & Updated requirements to match the selected technology stack: React Native mobile frontend, Node.js backend, REST API, and database storage. \\
+\hline
+1.0 & Final Snapshot & Final Submission & Refined functional and non-functional requirements, user roles, constraints, assumptions, and acceptance criteria. \\
+\hline
+\end{longtable}
+
+\section{Introduction}
+
+\subsection{Purpose}
+This Software Requirements Specification (SRS) describes the requirements for a product expiration tracking application. The application helps users record household products, track expiration dates, receive reminders, and reduce waste caused by forgotten or expired items. The system is designed as a mobile-first application using React Native for the frontend and Node.js for the backend.
+
+\subsection{Scope}
+The application allows users to create an account, add products, organize products by category, track expiration dates, and receive alerts before products expire. Users can manually enter product information and optionally add extra details such as quantity, storage location, notes, and product images. The backend provides secure data storage, authentication, and API services for the mobile application.
+
+\subsection{Intended Audience}
+This document is intended for developers, testers, project reviewers, instructors, and future maintainers of the application. It explains what the system should do and defines measurable requirements for implementation and testing.
+
+\subsection{Definitions, Acronyms, and Abbreviations}
+\begin{description}[leftmargin=2.5cm]
+    \item[API] Application Programming Interface.
+    \item[CRUD] Create, Read, Update, and Delete operations.
+    \item[JWT] JSON Web Token, used for secure authentication.
+    \item[REST] Representational State Transfer, an architectural style for web APIs.
+    \item[SRS] Software Requirements Specification.
+    \item[UI] User Interface.
+    \item[UX] User Experience.
+\end{description}
+
+\section{Overall Description}
+
+\subsection{Product Perspective}
+The product expiration tracking application is a standalone mobile application supported by a backend service. The React Native frontend communicates with the Node.js backend through RESTful API endpoints. The backend stores user accounts and product data in a database. The application is designed for personal household use, but the architecture can be extended later for families, shared households, or small organizations.
+
+\subsection{Product Functions}
+The main functions of the system include:
+\begin{itemize}
+    \item User registration and login.
+    \item Product creation, editing, viewing, and deletion.
+    \item Expiration date tracking.
+    \item Product categorization.
+    \item Search and filtering by name, category, expiration status, or location.
+    \item Reminder notifications before expiration.
+    \item Dashboard view showing expired, soon-to-expire, and safe products.
+    \item Optional product image upload or image reference storage.
+\end{itemize}
+
+\subsection{User Classes and Characteristics}
+\begin{longtable}{|p{0.25\textwidth}|p{0.65\textwidth}|}
+\hline
+\textbf{User Class} & \textbf{Description} \\
+\hline
+Guest User & A person who has opened the application but has not created an account or logged in. Guest users can view the welcome screen and registration/login options. \\
+\hline
+Registered User & A person who has an account and can manage personal product records, categories, reminders, and profile settings. \\
+\hline
+Administrator & A future optional role that may manage system settings, user support, or application-level data. This role is not required for the first version. \\
+\hline
+\end{longtable}
+
+\subsection{Operating Environment}
+The mobile application will run on modern iOS and Android devices supported by React Native. The backend will run on a Node.js server environment. The database may be PostgreSQL, MongoDB, or another appropriate database selected during implementation. The backend may be hosted locally during development and deployed to a cloud platform for production.
+
+\subsection{Design and Implementation Constraints}
+\begin{itemize}
+    \item The frontend must be implemented using React Native.
+    \item The backend must be implemented using Node.js.
+    \item Communication between frontend and backend must use HTTPS in production.
+    \item User passwords must never be stored in plain text.
+    \item The first version should support manual product entry before adding advanced features such as barcode scanning or AI recognition.
+    \item The system should be designed with future scalability in mind.
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+\begin{itemize}
+    \item Users have access to a smartphone or mobile device.
+    \item Users have internet access when synchronizing data with the backend.
+    \item Push notifications depend on mobile platform notification services.
+    \item The backend depends on a reliable database service.
+    \item Users are responsible for entering accurate product expiration dates.
+\end{itemize}
+
+\section{Specific Requirements}
+
+\subsection{Functional Requirements}
+
+\subsubsection{User Registration and Authentication}
+\begin{enumerate}[label=FR-\arabic*.]
+    \item The system shall allow a new user to register using an email address and password.
+    \item The system shall validate that the email address format is correct.
+    \item The system shall require a password that meets minimum security rules.
+    \item The system shall securely hash user passwords before storing them.
+    \item The system shall allow registered users to log in using valid credentials.
+    \item The system shall issue an authentication token after successful login.
+    \item The system shall allow users to log out from the mobile application.
+\end{enumerate}
+
+\subsubsection{Product Management}
+\begin{enumerate}[label=FR-\arabic*. ,resume]
+    \item The system shall allow authenticated users to add a new product.
+    \item The system shall allow users to enter product name, expiration date, category, quantity, and storage location.
+    \item The system shall allow users to edit existing product information.
+    \item The system shall allow users to delete products.
+    \item The system shall allow users to view a list of all saved products.
+    \item The system shall allow users to view detailed information for one selected product.
+    \item The system shall prevent users from accessing products that belong to other users.
+\end{enumerate}
+
+\subsubsection{Category and Location Management}
+\begin{enumerate}[label=FR-\arabic*. ,resume]
+    \item The system shall provide default categories such as food, medicine, cosmetics, household supplies, and other.
+    \item The system shall allow users to assign a product to a category.
+    \item The system shall allow users to filter products by category.
+    \item The system shall allow users to enter a storage location, such as refrigerator, freezer, pantry, bathroom, or cabinet.
+\end{enumerate}
+
+\subsubsection{Expiration Tracking and Alerts}
+\begin{enumerate}[label=FR-\arabic*. ,resume]
+    \item The system shall calculate the number of days remaining before each product expires.
+    \item The system shall mark products as expired when the expiration date is earlier than the current date.
+    \item The system shall mark products as soon-to-expire when the expiration date is within a configurable reminder period.
+    \item The system shall display expired and soon-to-expire products on the dashboard.
+    \item The system shall allow users to set reminder preferences.
+    \item The system shall send or trigger notifications before a product expires, depending on the user's settings and platform support.
+\end{enumerate}
+
+\subsubsection{Search and Filtering}
+\begin{enumerate}[label=FR-\arabic*. ,resume]
+    \item The system shall allow users to search products by product name.
+    \item The system shall allow users to filter products by expiration status.
+    \item The system shall allow users to filter products by category.
+    \item The system shall allow users to sort products by expiration date.
+\end{enumerate}
+
+\subsubsection{User Profile and Settings}
+\begin{enumerate}[label=FR-\arabic*. ,resume]
+    \item The system shall allow users to view their profile information.
+    \item The system shall allow users to update basic account settings.
+    \item The system shall allow users to configure the default reminder period.
+    \item The system shall allow users to choose whether notifications are enabled or disabled.
+\end{enumerate}
+
+\subsection{Non-Functional Requirements}
+
+\subsubsection{Performance}
+\begin{enumerate}[label=NFR-\arabic*.]
+    \item The mobile application should load the dashboard within a reasonable time under normal network conditions.
+    \item The backend API should return common product list requests quickly for typical household data sizes.
+    \item The application should support at least hundreds of products per user without major performance problems.
+\end{enumerate}
+
+\subsubsection{Security}
+\begin{enumerate}[label=NFR-\arabic*. ,resume]
+    \item User passwords shall be hashed using a secure password hashing method.
+    \item Backend endpoints that access user data shall require authentication.
+    \item Users shall only be able to access their own product data.
+    \item Sensitive communication shall use HTTPS in production.
+    \item Authentication tokens shall have an expiration time.
+\end{enumerate}
+
+\subsubsection{Usability}
+\begin{enumerate}[label=NFR-\arabic*. ,resume]
+    \item The interface shall be simple enough for non-technical users.
+    \item Product entry forms shall use clear labels and validation messages.
+    \item The dashboard shall visually separate expired, soon-to-expire, and safe products.
+    \item The mobile design shall support common screen sizes for iOS and Android devices.
+\end{enumerate}
+
+\subsubsection{Reliability and Availability}
+\begin{enumerate}[label=NFR-\arabic*. ,resume]
+    \item The backend should handle invalid requests without crashing.
+    \item The application should show user-friendly error messages when the network is unavailable.
+    \item The database should preserve product data after users close the application.
+\end{enumerate}
+
+\subsubsection{Maintainability}
+\begin{enumerate}[label=NFR-\arabic*. ,resume]
+    \item The backend code should be organized by routes, controllers, services, and models.
+    \item The frontend code should be organized by screens, components, navigation, services, and state management.
+    \item The system should include clear naming conventions and comments where needed.
+    \item The system should support future features such as barcode scanning, shared family accounts, and analytics.
+\end{enumerate}
+
+\section{External Interface Requirements}
+
+\subsection{User Interfaces}
+The mobile application shall include the following main screens:
+\begin{itemize}
+    \item Welcome/Login screen.
+    \item Registration screen.
+    \item Dashboard screen.
+    \item Product list screen.
+    \item Add/Edit product screen.
+    \item Product detail screen.
+    \item Settings screen.
+\end{itemize}
+
+\subsection{Software Interfaces}
+The React Native application shall communicate with the Node.js backend through REST API endpoints. The backend shall communicate with a database using an appropriate database driver or Object Relational Mapping/Object Document Mapping library.
+
+\subsection{Communication Interfaces}
+The application shall use JSON for request and response bodies. In production, all communication shall use HTTPS.
+
+\section{Data Requirements}
+
+\subsection{Main Data Entities}
+\begin{longtable}{|p{0.22\textwidth}|p{0.68\textwidth}|}
+\hline
+\textbf{Entity} & \textbf{Main Fields} \\
+\hline
+User & userId, name, email, passwordHash, notificationPreference, createdAt, updatedAt \\
+\hline
+Product & productId, userId, name, category, expirationDate, quantity, location, notes, imageUrl, createdAt, updatedAt \\
+\hline
+Reminder & reminderId, userId, productId, reminderDate, status, createdAt \\
+\hline
+Category & categoryId, userId, name, isDefault \\
+\hline
+\end{longtable}
+
+\section{Acceptance Criteria}
+\begin{enumerate}
+    \item A new user can register, log in, and log out successfully.
+    \item An authenticated user can add, edit, delete, and view products.
+    \item Products are correctly classified as expired, soon-to-expire, or safe.
+    \item Search, filter, and sort functions return correct product results.
+    \item The system prevents one user from viewing or changing another user's products.
+    \item The application displays clear messages for validation errors and network errors.
+    \item The final version includes working React Native screens and Node.js API endpoints for the core requirements.
+\end{enumerate}
+
+\section{Future Enhancements}
+Future versions may include barcode scanning, AI-based product recognition, family sharing, grocery planning, recipe suggestions based on soon-to-expire products, offline mode, and analytics showing how much waste the user has reduced.
+
+\section{Conclusion}
+This SRS defines the required behavior and quality expectations for the product expiration tracking application. The system focuses on helping users manage household products, avoid waste, and receive timely reminders. The requirements in this document will guide the design, implementation, testing, and future improvement of the application.
+
+\end{document}

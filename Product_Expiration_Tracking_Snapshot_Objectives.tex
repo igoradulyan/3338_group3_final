@@ -1,0 +1,148 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Snapshot Objectives}
+\rhead{Product Expiration Tracking App}
+\cfoot{\thepage}
+
+\title{Snapshot Objectives\\Product Expiration Tracking Application}
+\author{Prepared for Course Project}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Project Summary}
+
+The Product Expiration Tracking Application is a mobile application designed to help users manually enter household products and track expiration dates. The application uses a React Native frontend for mobile devices and a Node.js backend with a database for secure storage. The current project scope focuses on manual product entry, product organization, expiration reminders, and basic account management.
+
+\section{Snapshot 1 Objectives: Project Planning and Initial Scope}
+
+\subsection{Main Goal}
+The goal of Snapshot 1 is to define the project idea, identify the main users, and establish the first version of the project scope.
+
+\subsection{Objectives}
+\begin{enumerate}[leftmargin=*]
+    \item Define the purpose of the Product Expiration Tracking Application.
+    \item Identify the target users and explain why they would need the application.
+    \item Decide that the first version will support manual product entry only.
+    \item Create the first list of required pages, including Welcome, Login, Registration, Dashboard, Add Product, Product List, Product Details, and Settings.
+    \item Define the basic data fields for a product, including name, category, quantity, location, purchase date, expiration date, and notes.
+    \item Write the first version of the Software Requirements Specification and Software Design Document.
+    \item Create a simple project plan and divide the work into future snapshots.
+\end{enumerate}
+
+\subsection{Expected Deliverables}
+\begin{itemize}[leftmargin=*]
+    \item Initial project description.
+    \item Initial requirements list.
+    \item Initial screen list.
+    \item First revision of SRS and SDD documents.
+\end{itemize}
+
+\section{Snapshot 2 Objectives: Core Backend and Database Design}
+
+\subsection{Main Goal}
+The goal of Snapshot 2 is to design and begin implementing the backend structure, database schema, and API endpoints needed for the core product tracking features.
+
+\subsection{Objectives}
+\begin{enumerate}[leftmargin=*]
+    \item Set up the Node.js and Express.js backend project structure.
+    \item Configure the PostgreSQL database connection.
+    \item Create database tables for users, products, categories, locations, and reminder settings.
+    \item Design REST API endpoints for authentication and product management.
+    \item Implement registration and login logic using password hashing and JSON Web Tokens.
+    \item Implement create, read, update, and delete operations for manually entered products.
+    \item Add backend validation for required product fields and valid expiration dates.
+    \item Test API routes using Postman, Insomnia, Supertest, or a similar tool.
+\end{enumerate}
+
+\subsection{Expected Deliverables}
+\begin{itemize}[leftmargin=*]
+    \item Backend project setup.
+    \item Database schema.
+    \item Authentication endpoints.
+    \item Product CRUD endpoints.
+    \item Updated SRS and SDD revisions.
+\end{itemize}
+
+\section{Snapshot 3 Objectives: Mobile Frontend and User Workflow}
+
+\subsection{Main Goal}
+The goal of Snapshot 3 is to build the React Native mobile interface and connect it to the backend API.
+
+\subsection{Objectives}
+\begin{enumerate}[leftmargin=*]
+    \item Set up the React Native mobile project using Expo or React Native CLI.
+    \item Create navigation between authentication screens and main app screens.
+    \item Build the Registration and Login pages.
+    \item Build the Dashboard page with product summary information.
+    \item Build the Add Product page with manual product entry fields.
+    \item Build the Product List page with search and filter options.
+    \item Build the Product Details and Edit Product pages.
+    \item Connect mobile screens to backend API endpoints using Axios or a similar HTTP client.
+    \item Store the authentication token securely enough for a course project using AsyncStorage or an equivalent tool.
+    \item Add user-friendly error messages for failed login, missing fields, and failed API requests.
+\end{enumerate}
+
+\subsection{Expected Deliverables}
+\begin{itemize}[leftmargin=*]
+    \item Working mobile navigation.
+    \item Login and registration screens connected to the backend.
+    \item Product list, add, edit, and detail screens.
+    \item API integration between React Native and Node.js.
+    \item Updated Design Specification.
+\end{itemize}
+
+\section{Snapshot 4 Objectives: Final Features, Testing, Docker, and Documentation}
+
+\subsection{Main Goal}
+The goal of Snapshot 4 is to complete the final version of the project, test the main workflows, prepare Docker configuration, and finalize the project documentation.
+
+\subsection{Objectives}
+\begin{enumerate}[leftmargin=*]
+    \item Add reminder settings that allow users to choose how many days before expiration they want to be reminded.
+    \item Add expiration status labels such as safe, expiring soon, and expired.
+    \item Complete category and storage location management.
+    \item Improve form validation and user feedback.
+    \item Add backend and frontend tests for the most important workflows.
+    \item Create Dockerfile and Docker Compose configuration for backend and database services.
+    \item Document all required packages, dependencies, libraries, and environment variables.
+    \item Review the project for security basics, including hashed passwords, protected routes, and no hardcoded secrets.
+    \item Finalize the SRS, SDD, Design Specification, and Snapshot Objectives documents.
+    \item Prepare the final project demonstration or submission package.
+\end{enumerate}
+
+\subsection{Expected Deliverables}
+\begin{itemize}[leftmargin=*]
+    \item Completed manual product tracking workflow.
+    \item Reminder settings and expiration status display.
+    \item Docker-ready backend and database setup.
+    \item Testing evidence or test descriptions.
+    \item Final SRS, SDD, Design Specification, and Snapshot Objectives documents.
+\end{itemize}
+
+\section{Overall Project Completion Criteria}
+
+The project can be considered complete when a registered user can log in, manually add products, view saved products, edit product details, delete products, organize products by category and location, and see expiration status based on expiration dates. The final version should also include clear documentation, Docker dependency information, and snapshot-based revisions showing how the project developed over time.
+
+\end{document}

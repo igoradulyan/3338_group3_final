@@ -1,0 +1,85 @@
+version: "3.9"
+
+# Product Expiration Tracking Application
+# Scope: manual product entry only. No barcode scanning or AI scanning.
+# Services:
+#   postgres  - relational database for users and products
+#   backend   - Node.js / Express REST API
+#   mobile    - optional React Native / Expo development container
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: expiration-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: expiration_tracker
+      POSTGRES_USER: expiration_user
+      POSTGRES_PASSWORD: expiration_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expiration_user -d expiration_tracker"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - expiration-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: expiration-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://expiration_user:expiration_password@postgres:5432/expiration_tracker
+      JWT_SECRET: change_this_secret_before_production
+      JWT_EXPIRES_IN: 1d
+      CORS_ORIGIN: http://localhost:8081
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - expiration-network
+
+  mobile:
+    build:
+      context: ./mobile
+      dockerfile: Dockerfile
+    container_name: expiration-mobile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
+      REACT_NATIVE_PACKAGER_HOSTNAME: localhost
+      API_BASE_URL: http://localhost:3000/api
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    volumes:
+      - ./mobile:/app
+      - /app/node_modules
+    command: npm start
+    networks:
+      - expiration-network
+
+volumes:
+  postgres_data:
+
+networks:
+  expiration-network:
+    driver: bridge

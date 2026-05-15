@@ -1,0 +1,494 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Design Specification}
+\rhead{Product Expiration Tracking App}
+\cfoot{\thepage}
+
+\title{Design Specification\\Product Expiration Tracking Application}
+\author{Prepared for Course Project}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section*{Document Revision History}
+\addcontentsline{toc}{section}{Document Revision History}
+
+\begin{longtable}{|p{0.15\textwidth}|p{0.20\textwidth}|p{0.25\textwidth}|p{0.30\textwidth}|}
+\hline
+\textbf{Version} & \textbf{Snapshot} & \textbf{Focus} & \textbf{Description of Revision} \\
+\hline
+0.1 & Snapshot 1 & Initial User Interface and Scope & Defined the main pages, core manual product entry workflow, and basic user navigation. \\
+\hline
+0.2 & Snapshot 2 & Backend and Data Design & Added Node.js backend structure, database tables, API routes, and product management logic. \\
+\hline
+0.3 & Snapshot 3 & Mobile Design and Testing & Added React Native screen breakdown, validation rules, notification logic, and testing tools. \\
+\hline
+1.0 & Snapshot 4 & Final Design Specification & Completed package, dependency, Docker, and deployment requirements for the final project version. \\
+\hline
+\end{longtable}
+
+\section{Project Overview}
+
+\subsection{Purpose}
+The Product Expiration Tracking Application is a mobile application that helps users manually record household products and track their expiration dates. The goal is to reduce food waste, avoid expired products, and give users a simple way to organize products by category, location, and expiration status.
+
+\subsection{Current Scope}
+The current version supports manual product entry only. Users type product details such as product name, category, quantity, storage location, purchase date, expiration date, and notes. Barcode scanning, image scanning, and artificial intelligence features are outside the scope of this version.
+
+\subsection{Technology Stack}
+The mobile frontend is built with React Native. The backend is built with Node.js and Express.js. The system uses a relational database such as PostgreSQL for persistent storage. The application is packaged for development and deployment with Docker.
+
+\section{System Users and Roles}
+
+\begin{longtable}{|p{0.25\textwidth}|p{0.65\textwidth}|}
+\hline
+\textbf{User Role} & \textbf{Description} \\
+\hline
+Guest User & A user who can view the welcome page and create a new account or sign in. \\
+\hline
+Registered User & A user who can add, view, edit, search, filter, and delete manually entered products. \\
+\hline
+System Administrator & A technical role responsible for deployment, database maintenance, backups, and system monitoring. This role does not require a separate admin screen in the first version. \\
+\hline
+\end{longtable}
+
+\section{Page and Screen Breakdown}
+
+\subsection{Welcome Page}
+\textbf{Purpose:} Introduces the application and directs users to login or registration.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Application name and short description.
+    \item Login button.
+    \item Create Account button.
+    \item Optional short explanation of the app purpose.
+\end{itemize}
+\textbf{Behavior:} The user chooses whether to sign in or create an account.
+
+\subsection{Registration Page}
+\textbf{Purpose:} Allows a new user to create an account.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Name input field.
+    \item Email input field.
+    \item Password input field.
+    \item Confirm password input field.
+    \item Create Account button.
+    \item Link to Login page.
+\end{itemize}
+\textbf{Validation Rules:}
+\begin{itemize}[leftmargin=*]
+    \item Email must use a valid email format.
+    \item Password must meet the minimum length requirement.
+    \item Password and confirm password must match.
+    \item Required fields cannot be empty.
+\end{itemize}
+
+\subsection{Login Page}
+\textbf{Purpose:} Authenticates existing users.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Email input field.
+    \item Password input field.
+    \item Login button.
+    \item Link to Registration page.
+    \item Optional forgot password link for future implementation.
+\end{itemize}
+\textbf{Behavior:} After successful login, the user is redirected to the Dashboard page. If login fails, the app shows a clear error message.
+
+\subsection{Dashboard Page}
+\textbf{Purpose:} Gives the user a quick summary of product expiration status.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Total number of saved products.
+    \item Number of products expiring soon.
+    \item Number of expired products.
+    \item Shortcut button to Add Product.
+    \item Shortcut button to Product List.
+\end{itemize}
+\textbf{Behavior:} The dashboard displays summary cards using data returned from the backend API.
+
+\subsection{Add Product Page}
+\textbf{Purpose:} Allows the user to manually add a new product.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Product name input.
+    \item Category dropdown or input.
+    \item Quantity input.
+    \item Unit input or dropdown.
+    \item Storage location dropdown or input.
+    \item Purchase date selector.
+    \item Expiration date selector.
+    \item Notes text area.
+    \item Save Product button.
+    \item Cancel button.
+\end{itemize}
+\textbf{Validation Rules:}
+\begin{itemize}[leftmargin=*]
+    \item Product name is required.
+    \item Expiration date is required.
+    \item Quantity must be a positive number when provided.
+    \item Expiration date should not be earlier than purchase date unless the user confirms it.
+\end{itemize}
+
+\subsection{Product List Page}
+\textbf{Purpose:} Displays all products saved by the user.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Search bar.
+    \item Filter by category.
+    \item Filter by storage location.
+    \item Filter by expiration status: safe, expiring soon, expired.
+    \item Product cards or list rows.
+    \item Add Product floating action button or top button.
+\end{itemize}
+\textbf{Behavior:} The list updates when the user searches or applies filters. Each product row opens the Product Details page.
+
+\subsection{Product Details Page}
+\textbf{Purpose:} Shows all saved information for one product.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Product name.
+    \item Category.
+    \item Quantity and unit.
+    \item Storage location.
+    \item Purchase date.
+    \item Expiration date.
+    \item Expiration status.
+    \item Notes.
+    \item Edit button.
+    \item Delete button.
+\end{itemize}
+\textbf{Behavior:} The user can edit or delete the selected product.
+
+\subsection{Edit Product Page}
+\textbf{Purpose:} Allows the user to update product information.\\
+\textbf{Main Elements:} Same form fields as the Add Product page, pre-filled with the current product data.\\
+\textbf{Behavior:} The backend updates the selected product after validation. The user is returned to the Product Details page or Product List page.
+
+\subsection{Categories and Locations Page}
+\textbf{Purpose:} Allows users to organize products by common categories and storage locations.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item List of categories such as Dairy, Meat, Produce, Frozen, Pantry, Medicine, and Other.
+    \item List of locations such as Refrigerator, Freezer, Pantry, Cabinet, Bathroom, and Other.
+    \item Add, edit, and delete options for custom categories or locations.
+\end{itemize}
+
+\subsection{Notifications and Reminder Settings Page}
+\textbf{Purpose:} Allows users to choose when they want to be reminded before a product expires.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item Enable or disable reminders.
+    \item Reminder timing options, such as 1 day, 3 days, 7 days, or 14 days before expiration.
+    \item Expired product alert setting.
+    \item Save Settings button.
+\end{itemize}
+\textbf{Behavior:} The app stores reminder preferences and uses them when checking product expiration dates.
+
+\subsection{Profile and Settings Page}
+\textbf{Purpose:} Allows users to manage account and app preferences.\\
+\textbf{Main Elements:}
+\begin{itemize}[leftmargin=*]
+    \item User name and email.
+    \item Edit profile option.
+    \item Change password option.
+    \item Logout button.
+    \item Delete account option for future implementation.
+\end{itemize}
+
+\section{Tool and Component Breakdown}
+
+\subsection{Frontend Components}
+\begin{longtable}{|p{0.28\textwidth}|p{0.62\textwidth}|}
+\hline
+\textbf{Component} & \textbf{Responsibility} \\
+\hline
+Navigation Component & Handles screen navigation using stack and tab navigation. \\
+\hline
+Auth Forms & Handles login and registration forms, input validation, and error messages. \\
+\hline
+Product Form & Shared form used by Add Product and Edit Product pages. \\
+\hline
+Product Card & Displays product summary information in the Product List page. \\
+\hline
+Expiration Badge & Shows whether a product is safe, expiring soon, or expired. \\
+\hline
+Search and Filter Controls & Allows users to search by product name and filter by category, location, or status. \\
+\hline
+Settings Controls & Allows users to manage reminder preferences and account settings. \\
+\hline
+\end{longtable}
+
+\subsection{Backend Modules}
+\begin{longtable}{|p{0.28\textwidth}|p{0.62\textwidth}|}
+\hline
+\textbf{Backend Module} & \textbf{Responsibility} \\
+\hline
+Authentication Module & Handles registration, login, password hashing, and JSON Web Token generation. \\
+\hline
+User Module & Stores and retrieves user profile information. \\
+\hline
+Product Module & Handles create, read, update, and delete operations for products. \\
+\hline
+Category Module & Manages default and custom categories. \\
+\hline
+Location Module & Manages default and custom storage locations. \\
+\hline
+Reminder Module & Checks expiration dates and user reminder settings. \\
+\hline
+Validation Middleware & Validates request data before it reaches controller logic. \\
+\hline
+Error Middleware & Returns consistent error responses for API failures. \\
+\hline
+\end{longtable}
+
+\section{API Endpoint Design}
+
+\begin{longtable}{|p{0.20\textwidth}|p{0.30\textwidth}|p{0.40\textwidth}|}
+\hline
+\textbf{Method} & \textbf{Endpoint} & \textbf{Purpose} \\
+\hline
+POST & /api/auth/register & Create a new user account. \\
+\hline
+POST & /api/auth/login & Authenticate a user and return a token. \\
+\hline
+GET & /api/users/me & Return the current user's profile. \\
+\hline
+PUT & /api/users/me & Update the current user's profile. \\
+\hline
+GET & /api/products & Return all products for the current user. \\
+\hline
+POST & /api/products & Create a new manually entered product. \\
+\hline
+GET & /api/products/:id & Return details for one product. \\
+\hline
+PUT & /api/products/:id & Update one product. \\
+\hline
+DELETE & /api/products/:id & Delete one product. \\
+\hline
+GET & /api/categories & Return user categories. \\
+\hline
+POST & /api/categories & Create a custom category. \\
+\hline
+GET & /api/locations & Return user storage locations. \\
+\hline
+POST & /api/locations & Create a custom storage location. \\
+\hline
+GET & /api/reminders/settings & Return reminder preferences. \\
+\hline
+PUT & /api/reminders/settings & Update reminder preferences. \\
+\hline
+\end{longtable}
+
+\section{Database Design}
+
+\subsection{Main Tables}
+\begin{longtable}{|p{0.25\textwidth}|p{0.65\textwidth}|}
+\hline
+\textbf{Table} & \textbf{Purpose} \\
+\hline
+users & Stores user account details, email, password hash, and timestamps. \\
+\hline
+products & Stores manually entered product records connected to a user. \\
+\hline
+categories & Stores default and custom categories. \\
+\hline
+locations & Stores default and custom storage locations. \\
+\hline
+reminder\_settings & Stores user reminder preferences. \\
+\hline
+\end{longtable}
+
+\subsection{Products Table Fields}
+\begin{longtable}{|p{0.25\textwidth}|p{0.25\textwidth}|p{0.40\textwidth}|}
+\hline
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\
+\hline
+id & UUID or integer & Unique product identifier. \\
+\hline
+user\_id & UUID or integer & Links product to the owner. \\
+\hline
+name & String & Product name entered by the user. \\
+\hline
+category\_id & UUID or integer & Links product to a category. \\
+\hline
+location\_id & UUID or integer & Links product to a storage location. \\
+\hline
+quantity & Decimal & Product quantity. \\
+\hline
+unit & String & Unit such as item, box, pound, gram, bottle, or package. \\
+\hline
+purchase\_date & Date & Date the product was purchased. \\
+\hline
+expiration\_date & Date & Date the product expires. \\
+\hline
+notes & Text & Optional user notes. \\
+\hline
+created\_at & Timestamp & Record creation time. \\
+\hline
+updated\_at & Timestamp & Last update time. \\
+\hline
+\end{longtable}
+
+\section{Docker Container Requirements}
+
+\subsection{Docker Services}
+The project should run with multiple Docker services during development:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{backend:} Node.js and Express.js API server.
+    \item \textbf{database:} PostgreSQL database container.
+    \item \textbf{mobile-dev:} Optional React Native or Expo development container for running Metro Bundler.
+    \item \textbf{adminer or pgAdmin:} Optional database administration tool for development.
+\end{itemize}
+
+\subsection{Backend NPM Dependencies}
+The following backend packages should be installed in the Node.js Docker container:
+\begin{longtable}{|p{0.30\textwidth}|p{0.60\textwidth}|}
+\hline
+\textbf{Package} & \textbf{Purpose} \\
+\hline
+express & Web framework for building REST API endpoints. \\
+\hline
+cors & Allows the mobile frontend to communicate with the API during development. \\
+\hline
+dotenv & Loads environment variables from a configuration file. \\
+\hline
+pg & PostgreSQL database driver for Node.js. \\
+\hline
+sequelize or prisma & Object-relational mapping or database access layer. \\
+\hline
+bcryptjs & Hashes user passwords before saving them. \\
+\hline
+jsonwebtoken & Creates and verifies JSON Web Tokens for authentication. \\
+\hline
+joi or express-validator & Validates incoming request data. \\
+\hline
+helmet & Adds basic security headers to the API. \\
+\hline
+morgan & Logs HTTP requests during development. \\
+\hline
+node-cron & Runs scheduled expiration reminder checks. \\
+\hline
+jest & Unit testing framework. \\
+\hline
+supertest & Tests Express API endpoints. \\
+\hline
+nodemon & Automatically restarts the backend during development. \\
+\hline
+\end{longtable}
+
+\subsection{Frontend React Native Dependencies}
+The following frontend packages should be installed for the mobile application:
+\begin{longtable}{|p{0.35\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Package} & \textbf{Purpose} \\
+\hline
+react & Base library for building the user interface. \\
+\hline
+react-native & Framework for building the mobile application. \\
+\hline
+expo or React Native CLI & Development and build tooling for the mobile app. \\
+\hline
+@react-navigation/native & Main navigation library. \\
+\hline
+@react-navigation/native-stack & Stack navigation for screens. \\
+\hline
+@react-navigation/bottom-tabs & Bottom tab navigation for main app sections. \\
+\hline
+axios & Sends HTTP requests to the backend API. \\
+\hline
+@react-native-async-storage/async-storage & Stores authentication tokens and small local preferences. \\
+\hline
+react-hook-form & Simplifies form handling and validation. \\
+\hline
+yup & Defines frontend validation schemas. \\
+\hline
+expo-notifications or notifee & Supports local reminder notifications. \\
+\hline
+react-native-paper or native-base & Provides reusable UI components. \\
+\hline
+jest & Unit testing framework. \\
+\hline
+@testing-library/react-native & Tests React Native components. \\
+\hline
+\end{longtable}
+
+\subsection{System-Level Docker Dependencies}
+The Docker environment should include:
+\begin{itemize}[leftmargin=*]
+    \item Node.js runtime, preferably an LTS version.
+    \item npm or yarn package manager.
+    \item PostgreSQL server image.
+    \item Git for source code management.
+    \item Optional Expo CLI for React Native development.
+    \item Environment variables for database URL, JWT secret, API port, and app mode.
+\end{itemize}
+
+\section{Testing Tools}
+
+\begin{longtable}{|p{0.30\textwidth}|p{0.60\textwidth}|}
+\hline
+\textbf{Tool} & \textbf{Purpose} \\
+\hline
+Jest & Unit tests for backend and frontend logic. \\
+\hline
+Supertest & Integration tests for Express API routes. \\
+\hline
+React Native Testing Library & UI component tests for mobile screens. \\
+\hline
+Postman or Insomnia & Manual API testing during development. \\
+\hline
+ESLint & Code quality checking. \\
+\hline
+Prettier & Code formatting. \\
+\hline
+Docker Compose & Runs the backend, database, and optional tools together. \\
+\hline
+\end{longtable}
+
+\section{Security Design}
+
+\begin{itemize}[leftmargin=*]
+    \item Passwords must be hashed before storage.
+    \item Authentication should use JSON Web Tokens.
+    \item API routes that access user data must require authentication.
+    \item A user must only access their own products, categories, locations, and reminder settings.
+    \item Environment secrets must not be hardcoded in source code.
+    \item Backend input validation must protect against invalid or harmful request data.
+\end{itemize}
+
+\section{Future Enhancements}
+
+Future versions may add shared household accounts, cloud push notifications, product usage analytics, shopping lists, and automatic product entry features. These features are not part of the current manual-entry-only design.
+
+\section{Conclusion}
+
+This Design Specification describes the pages, tools, components, dependencies, and Docker requirements for the Product Expiration Tracking Application. The design focuses on a realistic first version that can be completed using React Native, Node.js, Express.js, and PostgreSQL while keeping the product entry process manual and simple for users.
+
+\end{document}
