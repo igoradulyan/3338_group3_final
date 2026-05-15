@@ -61,7 +61,7 @@ The system is designed as a mobile-first application with a React Native fronten
 - Git and GitHub
 - npm
 - TestRail for test case management
-- Jira for project planning and backlog tracking
+- Jira for project planning and backlog tracking (https://cs3338-grp3.atlassian.net/jira/software/projects/GFP/boards/71/timeline?selectedIssue=GFP-1&atlOrigin=eyJpIjoiMDEwM2NjNWRhMDEzNDBiOGE5MzFlMWQ4OTdkNGVmNTkiLCJwIjoiaiJ9)
 - LaTeX for formal documentation
 
 ---
